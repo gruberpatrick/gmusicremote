@@ -35,7 +35,7 @@
         <div class="clear"></div>
       </div>
 
-      <div class="grid3 grid">
+      <!--<div class="grid3 grid">
         <span id="songdec" class="element dec">
           -
         </span>
@@ -50,7 +50,7 @@
           +
         </span>
         <div class="clear"></div>
-      </div>
+      </div>-->
 
       <div class="grid1 gridbottom">
         <div class="element">
@@ -64,7 +64,11 @@
 
           <div class="tabcontent">
             <div class="tabc tab1c active">This is the next content</div>
-            <div class="tabc tab2c">This is the settings content</div>
+
+            <div class="tabc tab2c">
+              <input type="text" id="songsearch" placeholder="Search" />
+            </div>
+
             <div class="tabc tab3c">This is the options content</div>
           </div>
 

@@ -1,9 +1,16 @@
 var express = require('express');
 var router = express.Router();
-var dbus = require('dbus-native');
+//var dbus = require('dbus-native');
 var sys = require('sys');
 var exec = require('child_process').exec;
 
+//------------------------------------------------------------------------------
+// Parse DBUS output of current song
+//
+// @param string : the DBUS array output as string
+//
+// @return object : all the values available
+//
 function parseSong(sResult){
 	var oRes = {};
 	var aParsed = sResult.split("dict entry(");
@@ -22,6 +29,13 @@ function parseSong(sResult){
 	return oRes;
 }
 
+//------------------------------------------------------------------------------
+// API routes
+//
+// TODO:
+// -> currently calling console to perform command
+// -> dbus-native already installed, ready to use
+//
 router.get('/', function(req, res) {
 	var oInfo = {};
 	exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.CurrentSong", function(err, stdio, stder){
