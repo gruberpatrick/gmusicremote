@@ -5,6 +5,7 @@
     <title>{{ title }}</title>
     <link rel="stylesheet" href="/stylesheets/style.css" />
     <script type="text/javascript" src="/javascripts/jquery.js"></script>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 
   </head>
   <body>
@@ -19,6 +20,9 @@
               ---
             </div>
           </div>
+        </div>
+        <div class="element timeproc">
+          <div id="timeproc"></div>
         </div>
       </div>
 
@@ -35,41 +39,49 @@
         <div class="clear"></div>
       </div>
 
-      <!--<div class="grid3 grid">
+      <div class="grid3 grid">
         <span id="songdec" class="element dec">
           -
         </span>
         <span class="element proc">
           <span class="songvolume">
             &nbsp;
-            <span class="process"></span>
-            <span class="processtext">100%</span>
+            <span class="process" id="volumeprocess"></span>
+            <span class="processtext" id="volumetext">100%</span>
           </span>
         </span>
         <span id="songinc" class="element inc">
           +
         </span>
         <div class="clear"></div>
-      </div>-->
+      </div>
 
       <div class="grid1 gridbottom">
         <div class="element">
 
           <div class="tab">
-            <span class="element tab active" data-for="tab1c">Next</span>
-            <span class="element tab" data-for="tab2c">S</span>
+            <span class="element tab active" data-for="tab1c">
+              <span class="line"></span>
+              <span class="line"></span>
+              <span class="line"></span>
+            </span>
+            <span class="element tab" data-for="tab2c"><img src="/images/search.png" width="" height="" alt="" /></span>
             <span class="element tab" data-for="tab3c">O</span>
             <div class="clear"></div>
           </div>
 
           <div class="tabcontent">
-            <div class="tabc tab1c active">This is the next content</div>
+            <div class="tabc tab1c active">
+              Next Songs
+            </div>
 
             <div class="tabc tab2c">
               <input type="text" id="songsearch" placeholder="Search" />
             </div>
 
-            <div class="tabc tab3c">This is the options content</div>
+            <div class="tabc tab3c">
+              Options
+            </div>
           </div>
 
         </div>

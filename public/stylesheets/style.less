@@ -1,28 +1,36 @@
 /* General Styles adapted for Smartphone */
 
-body{ padding: 0; margin: 0; font-family: Arial; background: #222; color: #FFF; }
+body{ padding: 0; margin: 0; font-family: Arial; background: #333; color: #FFF; }
 .clear{ clear: both; }
 
-#remote{  }
+#remote{ padding: 10px; }
 
 div.grid3{ background: #333; }
-div.grid3 span.element{ width: 33.333333%; float: left; text-align: center; font-size: 10em; display: block; color: #FFF; text-decoration: none; cursor: pointer; }
-div.grid3 span.element span.songvolume{ border: 0.1em solid #222; border-bottom: none; display: block; width: 100%; height: 100%; position: relative; }
-div.grid3 span.element span.songvolume span.process{ width: 80%; background: #4a9cf1; display: block; position: absolute; left: 0; top: 0; height: 100%; }
+div.grid3 span.element{ width: 33.333333%; float: left; text-align: center; font-size: 45px; display: block; color: #FFF; text-decoration: none; cursor: pointer; }
+div.grid3 span.element span.songvolume{ border: 10px solid #222; border-bottom: none; display: block; height: 100%; position: relative; }
+div.grid3 span.element span.songvolume span.process{ width: 100%; background: #4a9cf1; display: block; position: absolute; left: 0; top: 0; height: 100%; }
 div.grid3 span.element span.songvolume span.processtext{ position: absolute; left: 0; top: 0; height: 100%; width: 100%; font-size: 0.6em; line-height: 2em; }
 
+div.grid3 span.element.prev, div.grid3 span.element.next, div.grid3 span.element.play_pause{ font-size: 50px; padding: 5px 0; font-weight: bold; }
+
 div.grid1{  }
-div.grid1.gridtop div.element{ padding: 1em; font-size: 5em; white-space: nowrap; position:relative; overflow: hidden; border: 0.5em solid #333; border-bottom: none; }
+div.grid1.gridtop div.element{ padding: 10px; font-size: 40px; white-space: nowrap; position:relative; overflow: hidden; background: #222; }
 div.grid1.gridtop div.element div.scroll{ position: relative; }
 div.grid1.gridtop div.element div.scroll div.scroll_inner{ position: absolute; left: 0; top: 0; -webkit-transition: all 10s ease; -moz-transition: all 10s ease; -o-transition: all 10s ease; -ms-transition: all 10s ease; transition: all 10s ease; }
 div.grid1.gridtop div.element div.scroll div.scroll_inner.all{ left: -100%; }
 
-div.grid1.gridbottom div.element{ padding: 1em; font-size: 3em; white-space: nowrap; position:relative; overflow: hidden; border: 0.9em solid #333; border-top: none; }
+div.grid1.gridtop div.element.timeproc{ padding: 0; height: 5px; position: relative; }
+#timeproc{ position:absolute; left: 0; top: 0; height: 5px; width: 0%; background: #4a9cf1; }
 
-div.tab span.element{ display: block; float: left; width: 33.333333%; text-align: center; font-size: 2em; position: relative; cursor: pointer; }
+div.grid1.gridbottom div.element{ padding: 10px; font-size: 3em; white-space: nowrap; position:relative; overflow: hidden; background: #222; }
+
+div.tab span.element{ display: block; float: left; width: 33.333333%; text-align: center; font-size: 36px; position: relative; cursor: pointer; height: 46px; }
 div.tab span.element.active{ background: #333; }
+div.tab span.element span.line{ display: block; width: 35%; background: #FFF; height: 4px; margin: 5px auto; }
+div.tab span.element span.line:first-child{ margin-top: 12px; }
 
-div.tabcontent div.tabc{ display: none; font-size: 1.5em; }
-div.tabcontent div.tabc.active{ display: block; background: #333; padding: 0.5em; }
+div.tabcontent div.tabc{ display: none; font-size: 40px; }
+div.tabcontent div.tabc.active{ display: block; background: #333; padding: 10px; }
+div.tabcontent div.tabc input{ width: 100%; font-size: 35px; outline: none; border: none; background: #FFF; }
 
 /* TODO: style responsive */

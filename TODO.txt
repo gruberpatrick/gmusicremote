@@ -1,0 +1,7 @@
+TODO:
+
+-> Add Socket Connection to check if song has been changed from elsewhere or the playback has been paused
+-> Change Symbol when playback is paused
+-> Next Songs
+-> Search
+-> Options

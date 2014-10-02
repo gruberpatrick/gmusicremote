@@ -30,6 +30,36 @@ function parseSong(sResult){
 }
 
 //------------------------------------------------------------------------------
+// Parse Volume output of system
+//
+// @param string : the volume output of the Master
+//
+// @return object : Volume information
+//
+function parseVolume(sVolume){
+	var oRes = {};
+	var lStart = 0;
+	var lEnd = 0;
+	for(var i = 0; i < 3; i++){
+		lStart = sVolume.indexOf("[", lEnd) + 1;
+		lEnd = sVolume.indexOf("]", lStart);
+		oRes[i] = sVolume.substr(lStart, lEnd - lStart);
+	}
+	return oRes;
+}
+
+//------------------------------------------------------------------------------
+// Parse Elapsed output of current song
+//
+// @param string : the elapsed output of the song
+//
+// @return object : elapsed information
+//
+function parseElapsed(sElapsed){
+	return parseFloat(sElapsed.substr(sElapsed.indexOf("double ") + 7));
+}
+
+//------------------------------------------------------------------------------
 // API routes
 //
 // TODO:
@@ -38,9 +68,17 @@ function parseSong(sResult){
 //
 router.get('/', function(req, res) {
 	var oInfo = {};
+	var oVolume = {};
+	var lElapsed = 0;
+	exec("amixer get Master", function(err, stdio, stder){
+		oVolume = parseVolume(stdio);
+	});
+	exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.GetPosition", function(err, stdio, stder){
+		lElapsed = parseElapsed(stdio);
+	});
 	exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.CurrentSong", function(err, stdio, stder){
 		oInfo = parseSong(stdio);
-		res.send({result: oInfo});
+		res.send({volume: oVolume, result: oInfo, elapsed: lElapsed});
 	});
 });
 
@@ -72,11 +110,17 @@ router.get('/playpause', function(req, res) {
 });
 
 router.get('/volumedec', function(req, res) {
-	exec("dbus-send --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.RunCommand string:DecVolume", function(err, stdio, stder){});
+	exec("amixer set Master 5%-", function(err, stdio, stder){});
+	exec("amixer get Master", function(err, stdio, stder){
+		res.send({result: parseVolume(stdio)});
+	});
 });
 
 router.get('/volumeinc', function(req, res) {
-	exec("dbus-send --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.RunCommand string:IncVolume", function(err, stdio, stder){});
+	exec("amixer set Master 5%+", function(err, stdio, stder){});
+	exec("amixer get Master", function(err, stdio, stder){
+		res.send({result: parseVolume(stdio)});
+	});
 });
 
 module.exports = router;
