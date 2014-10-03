@@ -60,6 +60,40 @@ function parseElapsed(sElapsed){
 }
 
 //------------------------------------------------------------------------------
+// Parse Playing output of current song
+//
+// @param bool : if song is playing
+//
+function parsePlaying(sPlaying){
+	return sPlaying.substr(sPlaying.indexOf("boolean ") + 8).trim();
+}
+
+//------------------------------------------------------------------------------
+// Load the general Information of the current song
+//
+// @param object : the result object for the final output
+//
+function loadGeneralInformation(res){
+	var oInfo = {};
+	var oVolume = {};
+	var lElapsed = 0;
+	var bPlaying = "false";
+	exec("amixer get Master", function(err, stdio, stder){
+		oVolume = parseVolume(stdio);
+	});
+	exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.GetPosition", function(err, stdio, stder){
+		lElapsed = parseElapsed(stdio);
+	});
+	exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.Playing", function(err, stdio, stder){
+		bPlaying = parsePlaying(stdio);
+	});
+	exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.CurrentSong", function(err, stdio, stder){
+		oInfo = parseSong(stdio);
+		res.send({volume: oVolume, result: oInfo, elapsed: lElapsed, playing: bPlaying});
+	});
+}
+
+//------------------------------------------------------------------------------
 // API routes
 //
 // TODO:
@@ -67,46 +101,22 @@ function parseElapsed(sElapsed){
 // -> dbus-native already installed, ready to use
 //
 router.get('/', function(req, res) {
-	var oInfo = {};
-	var oVolume = {};
-	var lElapsed = 0;
-	exec("amixer get Master", function(err, stdio, stder){
-		oVolume = parseVolume(stdio);
-	});
-	exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.GetPosition", function(err, stdio, stder){
-		lElapsed = parseElapsed(stdio);
-	});
-	exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.CurrentSong", function(err, stdio, stder){
-		oInfo = parseSong(stdio);
-		res.send({volume: oVolume, result: oInfo, elapsed: lElapsed});
-	});
+	loadGeneralInformation(res);
 });
 
 router.get('/next', function(req, res) {
 	exec("dbus-send --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.RunCommand string:NextSong", function(err, stdio, stder){});
-	var oInfo = {};
-	exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.CurrentSong", function(err, stdio, stder){
-		oInfo = parseSong(stdio);
-		res.send({result: oInfo});
-	});
+	loadGeneralInformation(res);
 });
 
 router.get('/prev', function(req, res) {
 	exec("dbus-send --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.RunCommand string:PrevSong", function(err, stdio, stder){});
-	var oInfo = {};
-	exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.CurrentSong", function(err, stdio, stder){
-		oInfo = parseSong(stdio);
-		res.send({result: oInfo});
-	});
+	loadGeneralInformation(res);
 });
 
 router.get('/playpause', function(req, res) {
 	exec("dbus-send --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.RunCommand string:PlayPause", function(err, stdio, stder){});
-	var oInfo = {};
-	exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.CurrentSong", function(err, stdio, stder){
-		oInfo = parseSong(stdio);
-		res.send({result: oInfo});
-	});
+	loadGeneralInformation(res);
 });
 
 router.get('/volumedec', function(req, res) {

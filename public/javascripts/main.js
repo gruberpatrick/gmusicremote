@@ -3,6 +3,7 @@ var sActive = "";
 var lOverflow = 0;
 var bToggle = true;
 var oInterval = null;
+var oReloadTimeout = null;
 
 // Settings:
 // -> Reload new Song after this one finished
@@ -37,7 +38,7 @@ function animateSongProcess(lElapsed, lTotal){
 
 	//var lPercentage = (lElapsed / lTotal) * 100;
 	//$("#timeproc").css({"transition": "all 0s linear", "width": lPercentage + "%"});
-	var lAhead = Math.round(lTotal - lElapsed);
+	var lAhead = Math.round(lTotal - (lElapsed + 0.5));
 	$("#timeproc").css({"transition": "all " + lAhead + "s linear", "width": "100%"});
 
 }
@@ -71,50 +72,53 @@ function loadStatus(sStat){
 	}
 
 	$.getJSON("/api/" + sStat, function(data){
-		if(data.result.uri != sActive){
 
-			// set song title to display
-			$("#songname").html(data.result.title + " &laquo; " + data.result.artist);
+		console.log(data);
 
-			if(bNoReload){
+		// set song title to display
+		$("#songname").html(data.result.title + " &laquo; " + data.result.artist);
 
-				// TODO: check if song is in pause:
-				// -> show correct symbol
-				// -> don't let countdown start until song is playing
+		// TODO: check if song is in pause:
+		// -> show correct symbol
+		// -> don't let countdown start until song is playing
 
-				// check if time has elapsed and add it for load of the next song
-				var lElapsed = 0;
-				if(typeof data.elapsed != "undefined"){
-					lElapsed = data.elapsed;
-				}
-				$("#timeproc").attr("style", "fuck it");
-				setTimeout(function(){ animateSongProcess(lElapsed, data.result.length); }, 500);
-
-				// set time to reload data
-				setTimeout(function(){ loadStatus(); }, ((data.result.length - lElapsed) + 0.5) * 1000);
-			}
-
-			// add song name display animation
-			lOverflow = $("#songname").width() - $("#songname").parent().width();
-			if(typeof oInterval != "null"){
-				clearInterval(oInterval);
-				$("#songname").css({"left": 0});
-			}
-			animateDisplay();
-			oInterval = setInterval(function(){ animateDisplay(); }, 10000);
-
-			// load the system volume and set it to display
-			if(typeof data.volume != "undefined"){
-				$("#volumetext").html(data.volume[0]);
-				$("#volumeprocess").css({width: data.volume[0].substr(0, data.volume[0].length - 1) + "%"});
-			}
-
-			sActive = data.result.uri;
+		// check if time has elapsed and add it for load of the next song
+		// check if song is playing and set symbols
+		var lElapsed = 0;
+		if(typeof data.elapsed != "undefined"){
+			lElapsed = data.elapsed;
+		}
+		var lPercentage = (lElapsed / data.result.length) * 100;
+		$("#timeproc").attr("style", "width: " + lPercentage + "%;");
+		if(data.playing == "true"){
+			setTimeout(function(){ animateSongProcess(lElapsed, data.result.length); }, 500);
+			$("#songplaypause").html("II");
+		}else{
+			$("#songplaypause").html(">");
 		}
 
-		if(!bNoReload){
-			setTimeout(function(){ loadStatus(); }, lReloadTime);
+		// set time to reload data
+		if(typeof oReloadTimeout != "null"){
+			clearTimeout(oReloadTimeout);
 		}
+		oReloadTimeout = setTimeout(function(){ loadStatus(); }, ((data.result.length - lElapsed) + 0.5) * 1000);
+
+		// add song name display animation
+		lOverflow = $("#songname").width() - $("#songname").parent().width();
+		if(typeof oInterval != "null"){
+			clearInterval(oInterval);
+			$("#songname").css({"left": 0});
+		}
+		animateDisplay();
+		oInterval = setInterval(function(){ animateDisplay(); }, 10000);
+
+		// load the system volume and set it to display
+		if(typeof data.volume != "undefined"){
+			$("#volumetext").html(data.volume[0]);
+			$("#volumeprocess").css({width: data.volume[0].substr(0, data.volume[0].length - 1) + "%"});
+		}
+
+		sActive = data.result.uri;
 
 	});
 }
