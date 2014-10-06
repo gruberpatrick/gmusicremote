@@ -25,12 +25,20 @@ div.grid1.gridtop div.element.timeproc{ padding: 0; height: 5px; position: relat
 div.grid1.gridbottom div.element{ padding: 10px; font-size: 3em; white-space: nowrap; position:relative; overflow: hidden; background: #222; }
 
 div.tab span.element{ display: block; float: left; width: 33.333333%; text-align: center; font-size: 36px; position: relative; cursor: pointer; height: 46px; }
-div.tab span.element.active{ background: #333; }
-div.tab span.element span.line{ display: block; width: 35%; background: #FFF; height: 4px; margin: 5px auto; }
+div.tab span.element.active{ background: #333; border-bottom: 2px solid #4a9cf1; }
+div.tab span.element span.line{ display: block; width: 23px; background: #FFF; height: 4px; margin: 5px auto; }
 div.tab span.element span.line:first-child{ margin-top: 12px; }
 
-div.tabcontent div.tabc{ display: none; font-size: 40px; }
+div.tabcontent{  }
+div.tabcontent div.tabc{ display: none; font-size: 40px; min-height: 250px; }
 div.tabcontent div.tabc.active{ display: block; background: #333; padding: 10px; }
 div.tabcontent div.tabc input{ width: 100%; font-size: 35px; outline: none; border: none; background: #FFF; }
+
+#search_result{ margin-top: 5px; }
+#search_result span.element{ display: block; border-bottom: 1px solid #111; padding: 5px; cursor: pointer; }
+#search_result span.element:last-child{ border: none; }
+#search_result span.element span.title{ display: block; font-size: 20px; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+#search_result span.element span.artist{ display: block; font-size: 15px; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+#search_result span.element span.album{ font-size: 12px; display: none; }
 
 /* TODO: style responsive */

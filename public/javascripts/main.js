@@ -4,6 +4,7 @@ var lOverflow = 0;
 var bToggle = true;
 var oInterval = null;
 var oReloadTimeout = null;
+var bFirst = true;
 
 // Settings:
 // -> Reload new Song after this one finished
@@ -36,8 +37,6 @@ function animateDisplay(){
 //
 function animateSongProcess(lElapsed, lTotal){
 
-	//var lPercentage = (lElapsed / lTotal) * 100;
-	//$("#timeproc").css({"transition": "all 0s linear", "width": lPercentage + "%"});
 	var lAhead = Math.round(lTotal - (lElapsed + 0.5));
 	$("#timeproc").css({"transition": "all " + lAhead + "s linear", "width": "100%"});
 
@@ -73,14 +72,15 @@ function loadStatus(sStat){
 
 	$.getJSON("/api/" + sStat, function(data){
 
-		console.log(data);
-
 		// set song title to display
 		$("#songname").html(data.result.title + " &laquo; " + data.result.artist);
+		if(bFirst){
+			loadSongs(data.result.artist, true);
+			bFirst = false;
+		}
 
 		// TODO: check if song is in pause:
-		// -> show correct symbol
-		// -> don't let countdown start until song is playing
+		// -> check error occuring sometimes while new song comes on
 
 		// check if time has elapsed and add it for load of the next song
 		// check if song is playing and set symbols
@@ -121,6 +121,44 @@ function loadStatus(sStat){
 		sActive = data.result.uri;
 
 	});
+}
+
+//------------------------------------------------------------------------------
+// Load Search results
+//
+// @param string : the search to execute
+//
+function loadSongs(sSearch, bAttachEvents){
+
+	$.getJSON("/api/search?s=" + sSearch, function(data){
+		$("#search_result span.element").unbind("click");
+		$("#search_result").html("");
+		$.each(data.result, function(i, o){
+			$("#search_result").append("<span class=\"element\" data-id=\"" + o["id"] + "\"><span class=\"title\">" + o["track"] + "</span><span class=\"artist\">" + o["artist"] + "</span><span class=\"album\">" + o["album"] + "</span></span>");
+		});
+		$("#search_result span.element").bind("click", function(oEvent){
+			playSong($(this).attr("data-id"), oEvent);
+		});
+		if(bAttachEvents){
+			$("#songsearch").on("keydown", function(oEvent){
+				if(oEvent.keyCode == 13){
+					loadSongs($("#songsearch").val(), false);
+				}
+			});
+		}
+	});
+
+}
+
+//------------------------------------------------------------------------------
+// Play song by ID
+//
+// @param string : the song ID
+//
+function playSong(sSongId, oEvent){
+
+	// TODO
+
 }
 
 //------------------------------------------------------------------------------

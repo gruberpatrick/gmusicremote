@@ -10,6 +10,10 @@ var api = require('./routes/api');
 
 var app = express();
 
+functions = require('./includes/functions');
+functions.getAllSongs();
+functions.searchSongs("bon");
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hjs');

@@ -133,4 +133,12 @@ router.get('/volumeinc', function(req, res) {
 	});
 });
 
+router.get('/search', function(req, res) {
+	if(typeof req.query.s == "undefined"){
+		res.send({result: functions.aAllSongs});
+	}else{
+		res.send({result: functions.searchSongs(req.query.s)});
+	}
+});
+
 module.exports = router;

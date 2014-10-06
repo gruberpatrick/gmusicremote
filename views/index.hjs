@@ -5,6 +5,7 @@
     <title>{{ title }}</title>
     <link rel="stylesheet" href="/stylesheets/style.css" />
     <script type="text/javascript" src="/javascripts/jquery.js"></script>
+
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 
   </head>
@@ -28,13 +29,13 @@
 
       <div class="grid3 grid">
         <span id="songprev" class="element prev">
-          <<
+          I<<
         </span>
         <span id="songplaypause" class="element play_pause">
           >
         </span>
         <span id="songnext" class="element next">
-          >>
+          >>I
         </span>
         <div class="clear"></div>
       </div>
@@ -65,8 +66,8 @@
               <span class="line"></span>
               <span class="line"></span>
             </span>
-            <span class="element tab" data-for="tab2c"><img src="/images/search.png" width="" height="" alt="" /></span>
-            <span class="element tab" data-for="tab3c">O</span>
+            <span class="element tab" data-for="tab2c"><img src="/images/search.png" width="23" height="22" alt="" /></span>
+            <span class="element tab" data-for="tab3c"><img src="/images/settings.png" width="23" height="24" alt="" /></span>
             <div class="clear"></div>
           </div>
 
@@ -77,6 +78,7 @@
 
             <div class="tabc tab2c">
               <input type="text" id="songsearch" placeholder="Search" />
+              <div id="search_result"></div>
             </div>
 
             <div class="tabc tab3c">
