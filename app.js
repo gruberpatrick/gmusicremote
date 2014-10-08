@@ -12,7 +12,7 @@ var app = express();
 
 functions = require('./includes/functions');
 functions.getSettings();
-functions.getAllSongs();
+functions.getAllSongs(); 
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
