@@ -26,7 +26,7 @@ module.exports = {
 				var aElements = aSongs[i].split("\t");
 				if(aElements[0] == "")
 					continue;
-				oThat.aAllSongs[aElements[0] - 2] = {"artist": aElements[4], "track": aElements[32], "album": aElements[2], "path": aElements[21], "file": aElements[10]};
+				oThat.aAllSongs[aElements[0]] = {"artist": aElements[4], "track": aElements[32], "album": aElements[2], "path": aElements[21], "file": aElements[10]};
 			}
 
 		});
@@ -43,7 +43,7 @@ module.exports = {
 				continue;
 			if((this.aAllSongs[i]["artist"].toLowerCase().indexOf(sSearch) > -1 || this.aAllSongs[i]["track"].toLowerCase().indexOf(sSearch) > -1 || this.aAllSongs[i]["album"].toLowerCase().indexOf(sSearch) > -1)){
 				aRes[c] = this.aAllSongs[i];
-				aRes[c++]["id"] = parseInt(i) + 1;
+				aRes[c++]["id"] = parseInt(i);
 			}
 		}
 		return aRes;
@@ -52,7 +52,11 @@ module.exports = {
 
 	getSong: function(sSongId){
 
-		return this.aAllSongs[parseInt(sSongId) - 1]["path"] + "/" + this.aAllSongs[parseInt(sSongId) - 1]["file"];
+		if(parseInt(sSongId) > 0 && parseInt(sSongId) < this.aAllSongs.length){
+			return this.aAllSongs[parseInt(sSongId)]["path"] + "/" + this.aAllSongs[parseInt(sSongId)]["file"];
+		}else{
+			return "";
+		}
 
 	}
 
