@@ -59,7 +59,7 @@ function loadStatus(sStat, oThat){
 		// set song title to display
 		$("#songname").removeClass("animate").css("left", "0").html("<span class=\"title\">" + data.result.title + "</span><span class=\"artist\">" + data.result.artist + "</span>").addClass("animate");
 		if(bFirst){
-			loadSongs(data.result.artist, true);
+			loadSongs(data.result.artist);
 			bFirst = false;
 		}
 
@@ -103,7 +103,7 @@ function loadStatus(sStat, oThat){
 //
 // @param string : the search to execute
 //
-function loadSongs(sSearch, bAttachEvents){
+function loadSongs(sSearch){
 
 	$.getJSON("/api/search?s=" + sSearch, function(data){
 		$("#search_result span.element").unbind("click");
@@ -114,13 +114,6 @@ function loadSongs(sSearch, bAttachEvents){
 		$("#search_result span.element").bind("click", function(oEvent){
 			loadStatus("play?p=" + $(this).attr("data-id"));
 		});
-		if(bAttachEvents){
-			$("#songsearch").on("keydown", function(oEvent){
-				if(oEvent.keyCode == 13){
-					loadSongs($("#songsearch").val(), false);
-				}
-			});
-		}
 	});
 
 }
@@ -168,6 +161,18 @@ $("#songdec").click(function(){
 
 $("#songinc").click(function(){
 	callCommand("volumeinc");
+});
+
+//------------------------------------------------------------------------------
+// Load Search Events
+//
+$("#songsearch").on("keydown", function(oEvent){
+	if(oEvent.keyCode == 13){
+		loadSongs($("#songsearch").val());
+	}
+});
+$("#songsearch_button").on("click", function(){
+	loadSongs($("#songsearch").val());
 });
 
 //------------------------------------------------------------------------------

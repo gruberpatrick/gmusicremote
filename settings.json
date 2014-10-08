@@ -1,3 +1,5 @@
 {
-	"DB": "/home/[USER]/.config/gmusicbrowser/gmbrc"
+	"DB": "/home/[USER]/.config/gmusicbrowser/gmbrc",
+	"versiontext": "v0.1 Alpha",
+	"versionbuild": "1"
 }

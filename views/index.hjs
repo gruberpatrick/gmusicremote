@@ -75,12 +75,19 @@
             </div>-->
 
             <div class="tabc tab2c active">
+              <span id="songsearch_button">&rarr;</span>
               <input type="text" id="songsearch" placeholder="Search" />
               <div id="search_result"></div>
             </div>
 
             <div class="tabc tab3c">
               <h2>Options:</h2>
+              <table border="0">
+                <tr>
+                  <td><strong>Version:</strong></td>
+                  <td>v0.1 Alpha</td>
+                </tr>
+              </table>
             </div>
           </div>
 
