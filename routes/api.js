@@ -148,7 +148,11 @@ router.get('/search', function(req, res) {
 
 router.get('/play', function(req, res) {
 	if(typeof req.query.p != "undefined"){
-		res.send({result: functions.getSong(req.query.p)});
+		exec("dbus-send --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.RunCommand string:\"EnqueueFiles " + encodeURI(functions.getSong(req.query.p)) + "\"", function(err, stdio, stder){
+			exec("dbus-send --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.RunCommand string:NextSong", function(err, stdio, stder){
+				loadGeneralInformation(res);
+			});
+		});
 	}
 });
 

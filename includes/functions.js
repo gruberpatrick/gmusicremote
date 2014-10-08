@@ -1,4 +1,5 @@
 var fs = require('fs');
+var exec = require('child_process').exec;
 
 module.exports = {
 
@@ -13,17 +14,22 @@ module.exports = {
 
 	getAllSongs: function(){
 
-		var sFile = this.oSettings["DB"];
-		var sContent = fs.readFileSync(sFile, 'utf-8');
-		var lStart = sContent.indexOf("[Songs]", 0);
-		sContent = sContent.substr(lStart, sContent.indexOf("[album]", lStart) - lStart);
-		var aSongs = sContent.split("\n");
-		for(var i = 2; i < aSongs.length; i++){
-			var aElements = aSongs[i].split("\t");
-			if(aElements[0] == "")
-				continue;
-			this.aAllSongs[aElements[0] - 1] = {"artist": aElements[4], "track": aElements[32], "album": aElements[2], "path": aElements[21], "file": aElements[10]};
-		}
+		var oThat = this;
+		exec("whoami", function(err, stdio, stder){
+
+			var sFile = oThat.oSettings["DB"].replace("[USER]", stdio.trim());
+			var sContent = fs.readFileSync(sFile, 'utf-8');
+			var lStart = sContent.indexOf("[Songs]", 0);
+			sContent = sContent.substr(lStart, sContent.indexOf("[album]", lStart) - lStart);
+			var aSongs = sContent.split("\n");
+			for(var i = 2; i < aSongs.length; i++){
+				var aElements = aSongs[i].split("\t");
+				if(aElements[0] == "")
+					continue;
+				oThat.aAllSongs[aElements[0] - 2] = {"artist": aElements[4], "track": aElements[32], "album": aElements[2], "path": aElements[21], "file": aElements[10]};
+			}
+
+		});
 
 	},
 
@@ -37,7 +43,7 @@ module.exports = {
 				continue;
 			if((this.aAllSongs[i]["artist"].toLowerCase().indexOf(sSearch) > -1 || this.aAllSongs[i]["track"].toLowerCase().indexOf(sSearch) > -1 || this.aAllSongs[i]["album"].toLowerCase().indexOf(sSearch) > -1)){
 				aRes[c] = this.aAllSongs[i];
-				aRes[c++]["id"] = i;
+				aRes[c++]["id"] = parseInt(i) + 1;
 			}
 		}
 		return aRes;

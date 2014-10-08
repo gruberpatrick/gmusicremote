@@ -112,7 +112,7 @@ function loadSongs(sSearch, bAttachEvents){
 			$("#search_result").append("<span class=\"element\" data-id=\"" + o["id"] + "\"><span class=\"title\">" + o["track"] + "</span><span class=\"artist\">" + o["artist"] + "</span><span class=\"album\">" + o["album"] + "</span></span>");
 		});
 		$("#search_result span.element").bind("click", function(oEvent){
-			playSong($(this).attr("data-id"));
+			loadStatus("play?p=" + $(this).attr("data-id"));
 		});
 		if(bAttachEvents){
 			$("#songsearch").on("keydown", function(oEvent){

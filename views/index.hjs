@@ -59,22 +59,22 @@
         <div class="element">
 
           <div class="tab">
-            <span class="element tab active" data-for="tab1c">
+            <!--<span class="element tab active" data-for="tab1c">
               <span class="line"></span>
               <span class="line"></span>
               <span class="line"></span>
-            </span>
-            <span class="element tab" data-for="tab2c"><img src="/images/search.png" width="23" height="22" alt="" /></span>
+            </span>-->
+            <span class="element tab active" data-for="tab2c"><img src="/images/search.png" width="23" height="22" alt="" /></span>
             <span class="element tab" data-for="tab3c"><img src="/images/settings.png" width="23" height="24" alt="" /></span>
             <div class="clear"></div>
           </div>
 
           <div class="tabcontent">
-            <div class="tabc tab1c active">
+            <!--<div class="tabc tab1c active">
               <h2>Next Songs:</h2>
-            </div>
+            </div>-->
 
-            <div class="tabc tab2c">
+            <div class="tabc tab2c active">
               <input type="text" id="songsearch" placeholder="Search" />
               <div id="search_result"></div>
             </div>
