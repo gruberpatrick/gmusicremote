@@ -16,7 +16,6 @@
       <div class="grid1 gridtop">
         <div class="element">
           <div class="scroll">
-            &nbsp;
             <div class="scroll_inner" id="songname">
               ---
             </div>
@@ -28,32 +27,31 @@
       </div>
 
       <div class="grid3 grid">
-        <span id="songprev" class="element prev">
-          I<<
-        </span>
-        <span id="songplaypause" class="element play_pause">
+        <a id="songprev" class="element prev">
+          <<
+        </a>
+        <a id="songplaypause" class="element play_pause">
           >
-        </span>
-        <span id="songnext" class="element next">
-          >>I
-        </span>
+        </a>
+        <a id="songnext" class="element next">
+          >>
+        </a>
         <div class="clear"></div>
       </div>
 
-      <div class="grid3 grid">
-        <span id="songdec" class="element dec">
+      <div class="grid3 grid volume">
+        <span class="process" id="volumeprocess"></span>
+        <a id="songdec" class="element dec">
           -
-        </span>
-        <span class="element proc">
+        </a>
+        <a class="element proc">
           <span class="songvolume">
-            &nbsp;
-            <span class="process" id="volumeprocess"></span>
             <span class="processtext" id="volumetext">100%</span>
           </span>
-        </span>
-        <span id="songinc" class="element inc">
+        </a>
+        <a id="songinc" class="element inc">
           +
-        </span>
+        </a>
         <div class="clear"></div>
       </div>
 
@@ -73,7 +71,7 @@
 
           <div class="tabcontent">
             <div class="tabc tab1c active">
-              Next Songs
+              <h2>Next Songs:</h2>
             </div>
 
             <div class="tabc tab2c">
@@ -82,7 +80,7 @@
             </div>
 
             <div class="tabc tab3c">
-              Options
+              <h2>Options:</h2>
             </div>
           </div>
 

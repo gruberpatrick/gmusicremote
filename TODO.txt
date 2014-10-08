@@ -1,7 +1,7 @@
 TODO:
 
--> Add Socket Connection to check if song has been changed from elsewhere or the playback has been paused -> dbus-monitor "type='signal',sender='org.gmusicbrowser',interface='org.gmusicbrowser'"
+-> Add Socket Connection to check if song has been changed from elsewhere or the playback has been paused: dbus-monitor "type='signal',sender='org.gmusicbrowser',interface='org.gmusicbrowser'"
 -> Fix bug of "playing: false" when forcing next song with api
--> Next Songs
+-> Next Songs: dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.RunCommand string:OpenFiles string:"/media/patrick/swap/music/bob%20marley/01.%20Iron%20Lion%20Zion.mp3"
 -> Search
 -> Options

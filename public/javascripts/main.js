@@ -2,7 +2,6 @@
 var sActive = "";
 var lOverflow = 0;
 var bToggle = true;
-var oInterval = null;
 var oReloadTimeout = null;
 var bFirst = true;
 
@@ -11,23 +10,6 @@ var bFirst = true;
 // -> Reload after certain amount of time
 var bNoReload = true;
 var lReloadTime = 5000;
-
-//------------------------------------------------------------------------------
-// Toggle the Song Display animation.
-//
-function animateDisplay(){
-
-	if(lOverflow > 0){
-		if(bToggle){
-			$("#songname").css({"left": "-" + lOverflow + "px"});
-			bToggle = false;
-		}else{
-			$("#songname").css({"left": 0});
-			bToggle = true;
-		}
-	}
-
-}
 
 //------------------------------------------------------------------------------
 // Animate Playback in process bar with CSS3 transition
@@ -64,7 +46,7 @@ function callCommand(sCommand){
 //
 // @param string : the command to execute
 //
-function loadStatus(sStat){
+function loadStatus(sStat, oThat){
 
 	if(typeof sStat == "undefined"){
 		sStat = "";
@@ -72,8 +54,10 @@ function loadStatus(sStat){
 
 	$.getJSON("/api/" + sStat, function(data){
 
+		$(oThat).removeClass("active");
+
 		// set song title to display
-		$("#songname").html(data.result.title + " &laquo; " + data.result.artist);
+		$("#songname").removeClass("animate").css("left", "0").html("<span class=\"title\">" + data.result.title + "</span><span class=\"artist\">" + data.result.artist + "</span>").addClass("animate");
 		if(bFirst){
 			loadSongs(data.result.artist, true);
 			bFirst = false;
@@ -103,15 +87,6 @@ function loadStatus(sStat){
 		}
 		oReloadTimeout = setTimeout(function(){ loadStatus(); }, ((data.result.length - lElapsed) + 0.5) * 1000);
 
-		// add song name display animation
-		lOverflow = $("#songname").width() - $("#songname").parent().width();
-		if(typeof oInterval != "null"){
-			clearInterval(oInterval);
-			$("#songname").css({"left": 0});
-		}
-		animateDisplay();
-		oInterval = setInterval(function(){ animateDisplay(); }, 10000);
-
 		// load the system volume and set it to display
 		if(typeof data.volume != "undefined"){
 			$("#volumetext").html(data.volume[0]);
@@ -137,7 +112,7 @@ function loadSongs(sSearch, bAttachEvents){
 			$("#search_result").append("<span class=\"element\" data-id=\"" + o["id"] + "\"><span class=\"title\">" + o["track"] + "</span><span class=\"artist\">" + o["artist"] + "</span><span class=\"album\">" + o["album"] + "</span></span>");
 		});
 		$("#search_result span.element").bind("click", function(oEvent){
-			playSong($(this).attr("data-id"), oEvent);
+			playSong($(this).attr("data-id"));
 		});
 		if(bAttachEvents){
 			$("#songsearch").on("keydown", function(oEvent){
@@ -155,9 +130,13 @@ function loadSongs(sSearch, bAttachEvents){
 //
 // @param string : the song ID
 //
-function playSong(sSongId, oEvent){
+function playSong(sSongId){
 
-	// TODO
+	$.getJSON("/api/play?p=" + sSongId, function(data){
+
+
+
+	});
 
 }
 
@@ -169,15 +148,18 @@ $(document).ready(function(){
 });
 
 $("#songprev").click(function(){
-	loadStatus("prev");
+	$(this).addClass("active");
+	loadStatus("prev", this);
 });
 
 $("#songnext").click(function(){
-	loadStatus("next");
+	$(this).addClass("active");
+	loadStatus("next", this);
 });
 
 $("#songplaypause").click(function(){
-	loadStatus("playpause");
+	$(this).addClass("active");
+	loadStatus("playpause", this);
 });
 
 $("#songdec").click(function(){
@@ -197,6 +179,7 @@ $("span.tab").each(function(i, o){
 
 		$("span.tab").removeClass("active");
 		$(this).addClass("active");
+
 		var o = $(this);
 		$("div.tabc").each(function(ii, oo){
 

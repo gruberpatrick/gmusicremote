@@ -80,16 +80,16 @@ function loadGeneralInformation(res){
 	var bPlaying = "false";
 	exec("amixer get Master", function(err, stdio, stder){
 		oVolume = parseVolume(stdio);
-	});
-	exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.GetPosition", function(err, stdio, stder){
-		lElapsed = parseElapsed(stdio);
-	});
-	exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.Playing", function(err, stdio, stder){
-		bPlaying = parsePlaying(stdio);
-	});
-	exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.CurrentSong", function(err, stdio, stder){
-		oInfo = parseSong(stdio);
-		res.send({volume: oVolume, result: oInfo, elapsed: lElapsed, playing: bPlaying});
+		exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.GetPosition", function(err, stdio, stder){
+			lElapsed = parseElapsed(stdio);
+			exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.Playing", function(err, stdio, stder){
+				bPlaying = parsePlaying(stdio);
+				exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.CurrentSong", function(err, stdio, stder){
+					oInfo = parseSong(stdio);
+					res.send({volume: oVolume, result: oInfo, elapsed: lElapsed, playing: bPlaying});
+				});
+			});
+		});
 	});
 }
 
@@ -105,31 +105,36 @@ router.get('/', function(req, res) {
 });
 
 router.get('/next', function(req, res) {
-	exec("dbus-send --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.RunCommand string:NextSong", function(err, stdio, stder){});
-	loadGeneralInformation(res);
+	exec("dbus-send --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.RunCommand string:NextSong", function(err, stdio, stder){
+		loadGeneralInformation(res);
+	});
 });
 
 router.get('/prev', function(req, res) {
-	exec("dbus-send --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.RunCommand string:PrevSong", function(err, stdio, stder){});
-	loadGeneralInformation(res);
+	exec("dbus-send --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.RunCommand string:PrevSong", function(err, stdio, stder){
+		loadGeneralInformation(res);
+	});
 });
 
 router.get('/playpause', function(req, res) {
-	exec("dbus-send --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.RunCommand string:PlayPause", function(err, stdio, stder){});
-	loadGeneralInformation(res);
+	exec("dbus-send --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.RunCommand string:PlayPause", function(err, stdio, stder){
+		loadGeneralInformation(res);
+	});
 });
 
 router.get('/volumedec', function(req, res) {
-	exec("amixer set Master 5%-", function(err, stdio, stder){});
-	exec("amixer get Master", function(err, stdio, stder){
-		res.send({result: parseVolume(stdio)});
+	exec("amixer set Master 5%-", function(err, stdio, stder){
+		exec("amixer get Master", function(err, stdio, stder){
+			res.send({result: parseVolume(stdio)});
+		});
 	});
 });
 
 router.get('/volumeinc', function(req, res) {
-	exec("amixer set Master 5%+", function(err, stdio, stder){});
-	exec("amixer get Master", function(err, stdio, stder){
-		res.send({result: parseVolume(stdio)});
+	exec("amixer set Master 5%+", function(err, stdio, stder){
+		exec("amixer get Master", function(err, stdio, stder){
+			res.send({result: parseVolume(stdio)});
+		});
 	});
 });
 
@@ -138,6 +143,12 @@ router.get('/search', function(req, res) {
 		res.send({result: functions.aAllSongs});
 	}else{
 		res.send({result: functions.searchSongs(req.query.s)});
+	}
+});
+
+router.get('/play', function(req, res) {
+	if(typeof req.query.p != "undefined"){
+		res.send({result: functions.getSong(req.query.p)});
 	}
 });
 
