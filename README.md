@@ -9,7 +9,7 @@ GmusicRemote
 <li>Check the <a href="https://github.com/gruberpatrick/gmusicremote/wiki">wiki</a> (for Screenshots, etc.)</li>
 </ul>
 
-<strong>WARNING:</strong> Currently in production. Basic functionality already working. No official release available.
+<strong>WARNING:</strong> Currently in production. Basic functionality already working.
 
 ##Download
 
