@@ -6,6 +6,7 @@ GmusicRemote
 <ul>
 <li>Get Gmusicbrowser here: <a href="http://gmusicbrowser.org/" target="_blank">http://gmusicbrowser.org/</a></li>
 <li>Download and install nodejs: <a href="http://nodejs.org/" target="_blank">http://nodejs.org/</a></li>
+<li>Check the <a href="https://github.com/gruberpatrick/gmusicremote/wiki">wiki</a> (for Screenshots, etc.)</li>
 </ul>
 
 <strong>WARNING:</strong> Currently in production. Basic functionality already working. No official release available.
@@ -16,32 +17,4 @@ You can download the whole Project as a ZIP file on the right sidebar.
 
 ##Installation
 
-To be able to update GmusicRemote and keep it up to date, you should follow these steps:
-
-1. Clone the repository:
-
-```sh
-git clone https://github.com/gruberpatrick/gmusicremote.git
-cd gmusicremote
-```
-
-2. Get the latest release -> Update GmusicRemote:
-
-```sh
-git fetch
-git checkout $(git describe --tags `git rev-list --tags --max-count=1`)
-```
-
-3. Run GmusicRemote:
-
-```sh
-node bin/www
-```
-
-4. The App should start at Port 3000. Open the Browser and call your Server IP-Address on Port 3000. Something like this:
-
-```sh
-192.168.1.5:3000
-```
-
-<strong>Thanks to the "Atom.io" Team to provide such a great way to keep Github Software up to date.</strong>
+Please check the <a href="https://github.com/gruberpatrick/gmusicremote/wiki/Installation">Installation Guide</a>.

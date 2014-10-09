@@ -24,7 +24,7 @@ module.exports = {
 			var aSongs = sContent.split("\n");
 			for(var i = 2; i < aSongs.length; i++){
 				var aElements = aSongs[i].split("\t");
-				if(aElements[0] == "")
+				if(aElements[0] == "" || aElements[19] != "0")
 					continue;
 				oThat.aAllSongs[aElements[0]] = {"artist": aElements[4], "track": aElements[32], "album": aElements[2], "path": aElements[21], "file": aElements[10]};
 			}
@@ -53,7 +53,7 @@ module.exports = {
 	getSong: function(sSongId){
 
 		if(parseInt(sSongId) > 0 && parseInt(sSongId) < this.aAllSongs.length){
-			return this.aAllSongs[parseInt(sSongId)]["path"] + "/" + this.aAllSongs[parseInt(sSongId)]["file"];
+			return encodeURI(this.aAllSongs[parseInt(sSongId)]["path"]) + "/" + encodeURI(this.aAllSongs[parseInt(sSongId)]["file"]);
 		}else{
 			return "";
 		}
