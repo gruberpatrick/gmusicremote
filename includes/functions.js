@@ -1,6 +1,5 @@
 var fs = require('fs');
 var exec = require('child_process').exec;
-var urlencode = require('urlencode');
 
 module.exports = {
 

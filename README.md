@@ -9,11 +9,9 @@ GmusicRemote
 <li>Check the <a href="https://github.com/gruberpatrick/gmusicremote/wiki">wiki</a> (for Screenshots, etc.)</li>
 </ul>
 
-<strong>WARNING:</strong> Currently in production. Basic functionality already working.
-
 ##Download
 
-You can download the whole Project as a ZIP file on the right sidebar.
+You can download the current Version of the Project as a ZIP file on the right sidebar or by <a href="https://github.com/gruberpatrick/gmusicremote/releases">Release</a>.
 
 ##Installation
 
