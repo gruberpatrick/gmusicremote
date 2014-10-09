@@ -27,13 +27,13 @@
       </div>
 
       <div class="grid3 grid">
-        <a id="songprev" class="element prev">
+        <a id="songprev" class="element prev select">
           <<
         </a>
-        <a id="songplaypause" class="element play_pause">
+        <a id="songplaypause" class="element play_pause select">
           >
         </a>
-        <a id="songnext" class="element next">
+        <a id="songnext" class="element next select">
           >>
         </a>
         <div class="clear"></div>
@@ -41,15 +41,15 @@
 
       <div class="grid3 grid volume">
         <span class="process" id="volumeprocess"></span>
-        <a id="songdec" class="element dec">
+        <a id="songdec" class="element dec select">
           -
         </a>
         <a class="element proc">
           <span class="songvolume">
-            <span class="processtext" id="volumetext">100%</span>
+            <span class="processtext select" id="volumetext">100%</span>
           </span>
         </a>
-        <a id="songinc" class="element inc">
+        <a id="songinc" class="element inc select">
           +
         </a>
         <div class="clear"></div>

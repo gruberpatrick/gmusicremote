@@ -1,17 +1,26 @@
 var fs = require('fs');
 var exec = require('child_process').exec;
+var urlencode = require('urlencode');
 
 module.exports = {
 
 	aAllSongs: [],
 	oSettings: {},
 
+	//------------------------------------------------------------------------------
+	// Load the settings file
+	//
+	// @param string : the current user that runs the app
+	//
 	getSettings: function(sUser){
 
 		this.oSettings = JSON.parse(fs.readFileSync("./settings.json"));
 
 	},
 
+	//------------------------------------------------------------------------------
+	// Load all songs from the DB file
+	//
 	getAllSongs: function(){
 
 		var oThat = this;
@@ -33,6 +42,13 @@ module.exports = {
 
 	},
 
+	//------------------------------------------------------------------------------
+	// Search in the loaded Songs for an occurence
+	//
+	// @param string : the search phrase
+	//
+	// @return array : array with all occurences of the search phrase
+	//
 	searchSongs: function(sSearch){
 
 		sSearch = sSearch.toLowerCase();
@@ -50,13 +66,34 @@ module.exports = {
 
 	},
 
+	//------------------------------------------------------------------------------
+	// Get a specific file by its ID
+	//
+	// @param string : the song ID
+	//
+	// @return string : the file path (encoded)
+	//
 	getSong: function(sSongId){
 
 		if(parseInt(sSongId) > 0 && parseInt(sSongId) < this.aAllSongs.length){
-			return encodeURI(this.aAllSongs[parseInt(sSongId)]["path"]) + "/" + encodeURI(this.aAllSongs[parseInt(sSongId)]["file"]);
+			console.log(this.aAllSongs[parseInt(sSongId)]["path"].replace(" ", "%20") + "/" + this.aAllSongs[parseInt(sSongId)]["file"].replace(" ", "%20"));
+			return this.parseUri(this.aAllSongs[parseInt(sSongId)]["path"] + "/" + this.aAllSongs[parseInt(sSongId)]["file"]);
 		}else{
 			return "";
 		}
+
+	},
+
+	//------------------------------------------------------------------------------
+	// Encode a song path for command execution
+	//
+	// @param string : the song path
+	//
+	// @return string : the encoded file path
+	//
+	parseUri: function(sUri){
+
+		return sUri.replace(/ /g, '%20');
 
 	}
 

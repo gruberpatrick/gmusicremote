@@ -1,5 +1,4 @@
 // General Attributes
-var sActive = "";
 var lOverflow = 0;
 var bToggle = true;
 var oReloadTimeout = null;
@@ -54,48 +53,51 @@ function loadStatus(sStat, oThat){
 
 	$.getJSON("/api/" + sStat, function(data){
 
-		$(oThat).removeClass("active");
-
-		// set song title to display
-		$("#songname").removeClass("animate").css("left", "0").html("<span class=\"title\">" + data.result.title + "</span><span class=\"artist\">" + data.result.artist + "</span>").addClass("animate");
-		if(bFirst){
-			loadSongs(data.result.artist);
-			bFirst = false;
-		}
-
-		// TODO: check if song is in pause:
-		// -> check error occuring sometimes while new song comes on
-
-		// check if time has elapsed and add it for load of the next song
-		// check if song is playing and set symbols
-		var lElapsed = 0;
-		if(typeof data.elapsed != "undefined"){
-			lElapsed = data.elapsed;
-		}
-		var lPercentage = (lElapsed / data.result.length) * 100;
-		$("#timeproc").attr("style", "width: " + lPercentage + "%;");
-		if(data.playing == "true"){
-			setTimeout(function(){ animateSongProcess(lElapsed, data.result.length); }, 500);
-			$("#songplaypause").html("II");
-		}else{
-			$("#songplaypause").html(">");
-		}
-
-		// set time to reload data
-		if(typeof oReloadTimeout != "null"){
-			clearTimeout(oReloadTimeout);
-		}
-		oReloadTimeout = setTimeout(function(){ loadStatus(); }, ((data.result.length - lElapsed) + 0.5) * 1000);
-
-		// load the system volume and set it to display
-		if(typeof data.volume != "undefined"){
-			$("#volumetext").html(data.volume[0]);
-			$("#volumeprocess").css({width: data.volume[0].substr(0, data.volume[0].length - 1) + "%"});
-		}
-
-		sActive = data.result.uri;
+		setCurrentSong(data, sStat, oThat);
 
 	});
+}
+
+function setCurrentSong(data, sStat, oThat){
+
+	if(typeof oThat != "undefined"){
+		$(oThat).removeClass("active");
+	}
+
+	// set song title to display
+	$("#songname").removeClass("animate").css("left", "0").html("<span class=\"title\">" + data.result.title + "</span><span class=\"artist\">" + data.result.artist + "</span>").addClass("animate");
+	if(bFirst){
+		loadSongs(data.result.artist);
+		bFirst = false;
+	}
+
+	// check if time has elapsed and add it for load of the next song
+	// check if song is playing and set symbols
+	var lElapsed = 0;
+	if(typeof data.elapsed != "undefined"){
+		lElapsed = data.elapsed;
+	}
+	var lPercentage = (lElapsed / data.result.length) * 100;
+	$("#timeproc").attr("style", "width: " + lPercentage + "%;");
+	if(data.playing == "true"){
+		setTimeout(function(){ animateSongProcess(lElapsed, data.result.length); }, 500);
+		$("#songplaypause").html("II");
+	}else{
+		$("#songplaypause").html(">");
+	}
+
+	// set time to reload data
+	if(typeof oReloadTimeout != "null"){
+		clearTimeout(oReloadTimeout);
+	}
+	oReloadTimeout = setTimeout(function(){ loadStatus(); }, ((data.result.length - lElapsed) + 0.5) * 1000);
+
+	// load the system volume and set it to display
+	if(typeof data.volume != "undefined"){
+		$("#volumetext").html(data.volume[0]);
+		$("#volumeprocess").css({width: data.volume[0].substr(0, data.volume[0].length - 1) + "%"});
+	}
+
 }
 
 //------------------------------------------------------------------------------
@@ -109,26 +111,11 @@ function loadSongs(sSearch){
 		$("#search_result span.element").unbind("click");
 		$("#search_result").html("");
 		$.each(data.result, function(i, o){
-			$("#search_result").append("<span class=\"element\" data-id=\"" + o["id"] + "\"><span class=\"title\">" + o["track"] + "</span><span class=\"artist\">" + o["artist"] + "</span><span class=\"album\">" + o["album"] + "</span></span>");
+			$("#search_result").append("<span class=\"element select\" data-id=\"" + o["id"] + "\"><span class=\"title\">" + o["track"] + "</span><span class=\"artist\">" + o["artist"] + "</span><span class=\"album\">" + o["album"] + "</span></span>");
 		});
 		$("#search_result span.element").bind("click", function(oEvent){
 			loadStatus("play?p=" + $(this).attr("data-id"));
 		});
-	});
-
-}
-
-//------------------------------------------------------------------------------
-// Play song by ID
-//
-// @param string : the song ID
-//
-function playSong(sSongId){
-
-	$.getJSON("/api/play?p=" + sSongId, function(data){
-
-
-
 	});
 
 }
