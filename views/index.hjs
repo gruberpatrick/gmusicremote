@@ -4,7 +4,9 @@
 
     <title>{{ title }}</title>
     <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link rel="stylesheet" href="/stylesheets/jquery.nouislider.min.css" />
     <script type="text/javascript" src="/javascripts/jquery.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.nouislider.all.min.js"></script>
 
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 
@@ -40,17 +42,13 @@
       </div>
 
       <div class="grid3 grid volume">
-        <span class="process" id="volumeprocess"></span>
+
         <a id="songdec" class="element dec select">
-          -
+          <img src="/images/sound-empty.png" width="11" height="22" alt="" />
         </a>
-        <a class="element proc">
-          <span class="songvolume">
-            <span class="processtext select" id="volumetext">100%</span>
-          </span>
-        </a>
-        <a id="songinc" class="element inc select">
-          +
+        <div id="sound-slider"></div>
+        <a id="songinc" class="element dec select">
+          <img src="/images/sound-full.png" width="23" height="22" alt="" />
         </a>
         <div class="clear"></div>
       </div>

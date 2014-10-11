@@ -6,7 +6,7 @@ GmusicRemote
 <ul>
 <li>Get Gmusicbrowser here: <a href="http://gmusicbrowser.org/" target="_blank">http://gmusicbrowser.org/</a></li>
 <li>Download and install nodejs: <a href="http://nodejs.org/" target="_blank">http://nodejs.org/</a></li>
-<li>Check the <a href="https://github.com/gruberpatrick/gmusicremote/wiki">wiki</a> (for Screenshots, etc.)</li>
+<li>Check the <a href="https://github.com/gruberpatrick/gmusicremote/wiki">wiki</a> (for Screenshots, Documentation, etc.)</li>
 </ul>
 
 ##Download

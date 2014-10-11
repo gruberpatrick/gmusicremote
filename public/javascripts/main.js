@@ -1,14 +1,8 @@
 // General Attributes
 var lOverflow = 0;
 var bToggle = true;
-var oReloadTimeout = null;
 var bFirst = true;
-
-// Settings:
-// -> Reload new Song after this one finished
-// -> Reload after certain amount of time
-var bNoReload = true;
-var lReloadTime = 5000;
+var oConnection = null;
 
 //------------------------------------------------------------------------------
 // Animate Playback in process bar with CSS3 transition
@@ -40,29 +34,41 @@ function callCommand(sCommand){
 }
 
 //------------------------------------------------------------------------------
-// Load current song status (call commands that change current song) and set
-// all neccessary values.
+// Load current song status (call commands that change current song)
 //
 // @param string : the command to execute
+// @param bool : if the display needs to be updated -> should only happen on first function call
 //
-function loadStatus(sStat, oThat){
+function loadStatus(sStat, bLoad){
 
-	if(typeof sStat == "undefined"){
+	if(typeof sStat == "undefined")
 		sStat = "";
-	}
+	if(typeof bLoad == "undefined")
+		bLoad = false;
 
 	$.getJSON("/api/" + sStat, function(data){
 
-		setCurrentSong(data, sStat, oThat);
+		if(bLoad && sStat != "process"){
+			setInformation(data, bLoad);
+		}else{
+			var lElapsed = 0;
+			if(typeof data.elapsed != "undefined"){
+				lElapsed = data.elapsed;
+			}
+			var lPercentage = (lElapsed / data.result.length) * 100;
+			$("#timeproc").attr("style", "width: " + lPercentage + "%;");
+		}
 
 	});
 }
 
-function setCurrentSong(data, sStat, oThat){
-
-	if(typeof oThat != "undefined"){
-		$(oThat).removeClass("active");
-	}
+//------------------------------------------------------------------------------
+// Set current information about Song, etc.
+//
+// @param object : the current data
+// @param boolean : if socket needs to be set up
+//
+function setInformation(data, bLoad){
 
 	// set song title to display
 	$("#songname").removeClass("animate").css("left", "0").html("<span class=\"title\">" + data.result.title + "</span><span class=\"artist\">" + data.result.artist + "</span>").addClass("animate");
@@ -81,21 +87,33 @@ function setCurrentSong(data, sStat, oThat){
 	$("#timeproc").attr("style", "width: " + lPercentage + "%;");
 	if(data.playing == "true"){
 		setTimeout(function(){ animateSongProcess(lElapsed, data.result.length); }, 500);
-		$("#songplaypause").html("II");
+		$("#songplaypause").html("II").addClass("playing");
 	}else{
-		$("#songplaypause").html(">");
+		$("#songplaypause").html(">").removeClass("playing");
 	}
-
-	// set time to reload data
-	if(typeof oReloadTimeout != "null"){
-		clearTimeout(oReloadTimeout);
-	}
-	oReloadTimeout = setTimeout(function(){ loadStatus(); }, ((data.result.length - lElapsed) + 0.5) * 1000);
 
 	// load the system volume and set it to display
 	if(typeof data.volume != "undefined"){
-		$("#volumetext").html(data.volume[0]);
-		$("#volumeprocess").css({width: data.volume[0].substr(0, data.volume[0].length - 1) + "%"});
+		$("#sound-slider").val(data.volume[0].replace("%", ""));
+	}
+
+	// Initialize WebSocket
+	if(bLoad){
+		$(function () {
+				// if user is running mozilla then use it's built-in WebSocket
+				window.WebSocket = window.WebSocket || window.MozWebSocket;
+				oConnection = new WebSocket(document.URL.replace("http", "ws").replace(":" + data.settings.app_port, ":" + data.settings.server_port));
+				oConnection.onopen = function () {
+					// connection is opened and ready to use
+				};
+				oConnection.onerror = function (error) {
+					// an error occurred when sending/receiving data
+				};
+				oConnection.onmessage = function (oMessage) {
+					var oData = JSON.parse(oMessage.data);
+					setInformation(oData);
+				};
+		});
 	}
 
 }
@@ -124,30 +142,36 @@ function loadSongs(sSearch){
 // Initialize App Event Handlers
 //
 $(document).ready(function(){
-	loadStatus();
+	loadStatus("", true);
 });
 
 $("#songprev").click(function(){
-	$(this).addClass("active");
-	loadStatus("prev", this);
+	oConnection.send(JSON.stringify({"control": "prev"}));
 });
 
 $("#songnext").click(function(){
-	$(this).addClass("active");
-	loadStatus("next", this);
+	oConnection.send(JSON.stringify({"control": "next"}));
 });
 
 $("#songplaypause").click(function(){
-	$(this).addClass("active");
-	loadStatus("playpause", this);
+	if($(this).hasClass("playing")){
+		$("#songplaypause").html(">").removeClass("playing");
+	}else{
+		$("#songplaypause").html("II").addClass("playing");
+	}
+	oConnection.send(JSON.stringify({"control": "playpause"}));
 });
 
-$("#songdec").click(function(){
-	callCommand("volumedec");
+$("#sound-slider").noUiSlider({
+	start: 0,
+	connect: "lower",
+	range: {
+		'min': 0,
+		'max': 100
+	}
 });
-
-$("#songinc").click(function(){
-	callCommand("volumeinc");
+$("#sound-slider").on("slide", function(){
+	oConnection.send(JSON.stringify({"volume": $("#sound-slider").val()}));
 });
 
 //------------------------------------------------------------------------------
@@ -185,4 +209,21 @@ $("span.tab").each(function(i, o){
 
 	});
 
+});
+
+//------------------------------------------------------------------------------
+// Check if Phone was in sleep mode
+//
+var lastCheck = 0;
+function sleepCheck() {
+	var now = new Date().getTime();
+	var diff = now - lastCheck;
+	if (diff > 5000) {
+  	loadStatus("", true);
+	}
+	lastCheck = now;
+}
+$(document).ready(function() {
+	lastCheck = new Date().getTime();
+	setInterval(sleepCheck, 1000);
 });

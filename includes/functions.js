@@ -4,18 +4,7 @@ var exec = require('child_process').exec;
 module.exports = {
 
 	aAllSongs: [],
-	oSettings: {},
 
-	//------------------------------------------------------------------------------
-	// Load the settings file
-	//
-	// @param string : the current user that runs the app
-	//
-	getSettings: function(sUser){
-
-		this.oSettings = JSON.parse(fs.readFileSync("./settings.json"));
-
-	},
 
 	//------------------------------------------------------------------------------
 	// Load all songs from the DB file
@@ -25,7 +14,7 @@ module.exports = {
 		var oThat = this;
 		exec("whoami", function(err, stdio, stder){
 
-			var sFile = oThat.oSettings["DB"].replace("[USER]", stdio.trim());
+			var sFile = settings["DB"].replace("[USER]", stdio.trim());
 			var sContent = fs.readFileSync(sFile, 'utf-8');
 			var lStart = sContent.indexOf("[Songs]", 0);
 			sContent = sContent.substr(lStart, sContent.indexOf("[album]", lStart) - lStart);
@@ -75,7 +64,6 @@ module.exports = {
 	getSong: function(sSongId){
 
 		if(parseInt(sSongId) > 0 && parseInt(sSongId) < this.aAllSongs.length){
-			console.log(this.aAllSongs[parseInt(sSongId)]["path"].replace(" ", "%20") + "/" + this.aAllSongs[parseInt(sSongId)]["file"].replace(" ", "%20"));
 			return this.parseUri(this.aAllSongs[parseInt(sSongId)]["path"] + "/" + this.aAllSongs[parseInt(sSongId)]["file"]);
 		}else{
 			return "";

@@ -13,8 +13,16 @@ div.grid3 span.process{ width: 100%; background: #4a9cf1; display: block; positi
 div.grid3 a.element span.songvolume span.processtext{ height: 100%; width: 100%; font-size: 24px; vertical-align: middle; line-height: 24px; }
 
 div.grid3 a.element.prev, div.grid3 a.element.next, div.grid3 a.element.play_pause{ font-size: 50px; padding: 5px 0; font-weight: bold; margin: 5px 0; border-radius: 2px; }
-div.grid3.volume{ border: 10px solid #333; border-bottom: none; border-top-left-radius: 2px; border-top-right-radius: 2px; }
+div.grid3.volume{ margin: 10px 0 5px 0; }
 div.grid3 a.element.songdec, div.grid3 a.element.songinc{ position: relative; z-index: 100; }
+
+#songdec, #songinc{ width: 20%; font-size: 20px; cursor: initial; }
+#sound-slider{ float: left; width: 100%; background: #4a9cf1; border: none; border-radius: 2px; height: 10px; width: 60%; margin-top: 5px; padding: 0 15px; }
+#sound-slider div.noUi-background{ background: #333; box-shadow: none; border-radius: 2px; }
+#sound-slider div.noUi-base{ border-radius: 2px; cursor: pointer; position: relative; }
+#sound-slider div.noUi-base:after{ width: 15px; background: #333; height: 10px; display: block; content: ""; position: absolute; top: 0; right: 0; }
+#sound-slider div.noUi-handle{ width: 30px; height: 30px; left: -15px; top: -10px; border-radius: 2px; background: #FFF; box-shadow: none; cursor: pointer; }
+#sound-slider div.noUi-handle:before, #sound-slider div.noUi-handle:after{ width: 0; height: 0; }
 
 a.element.active{ background: #4a9cf1; box-shadow: 0 0 4px #333; }
 

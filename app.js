@@ -7,12 +7,15 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var api = require('./routes/api');
+exec = require('child_process').exec;
 
 var app = express();
+settings = require('./settings.json');
 
+// call functions
 functions = require('./includes/functions');
-functions.getSettings();
-functions.getAllSongs(); 
+functions.getAllSongs();
+signals = require('./includes/signals.js');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

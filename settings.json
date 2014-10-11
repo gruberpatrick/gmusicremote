@@ -1,5 +1,11 @@
 {
 	"DB": "/home/[USER]/.config/gmusicbrowser/gmbrc",
+	"app_port": 3000,
+	"server_port": 3030,
+	"sound_command_pre": "amixer set Master ",
+	"sound_command_post": "%",
+	"experimental_functions": true,
+
 	"versiontext": "v0.1 Alpha",
 	"versionbuild": "1"
 }
