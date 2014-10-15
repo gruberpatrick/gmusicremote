@@ -37,4 +37,12 @@ router.get('/play', function(req, res) {
 	}
 });
 
+router.get('/enqueue', function(req, res) {
+	if(typeof req.query.p != "undefined"){
+		exec("dbus-send --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.RunCommand string:\"EnqueueFiles " + functions.getSong(req.query.p) + "\"", function(err, stdio, stder){
+			res.send({});
+		});
+	}
+});
+
 module.exports = router;

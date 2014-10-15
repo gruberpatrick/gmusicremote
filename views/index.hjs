@@ -83,7 +83,7 @@
               <table border="0">
                 <tr>
                   <td><strong>Version:</strong></td>
-                  <td>v0.1 Alpha</td>
+                  <td>v1.1</td>
                 </tr>
               </table>
             </div>
@@ -93,6 +93,9 @@
       </div>
 
     </div>
+
+    <div id="overlay_background"></div>
+    <div id="overlay_content"><img src="/images/loader.gif" width="" height="" alt="" /><span id="overlay_text"></span></div>
 
     <script type="text/javascript" src="/javascripts/main.js"></script>
   </body>

@@ -101,9 +101,9 @@ module.exports = {
 					exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.CurrentSong", function(err, stdio, stder){
 						oInfo = oThat.parseSong(stdio);
 						if(typeof res != "undefined"){
-							res.send({volume: oVolume, result: oInfo, elapsed: lElapsed, playing: bPlaying, settings: settings});
+							res.send({volume: oVolume, result: oInfo, elapsed: lElapsed, playing: bPlaying, settings: settings, timestamp: new Date().getTime()});
 						}else{
-							oThat.sendSocket({volume: oVolume, result: oInfo, elapsed: lElapsed, playing: bPlaying});
+							oThat.sendSocket({volume: oVolume, result: oInfo, elapsed: lElapsed, playing: bPlaying, timestamp: new Date().getTime()});
 						}
 					});
 				});

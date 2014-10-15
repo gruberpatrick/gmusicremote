@@ -51,10 +51,20 @@ div.tabcontent div.tabc h2{ font-size: 24px; border-bottom: 1px solid #FFF; marg
 div.tabcontent div.tabc table{ width: 100%; }
 
 #search_result{ margin-top: 5px; }
-#search_result span.element{ display: block; border-bottom: 1px solid #333; padding: 5px; cursor: pointer; }
+#search_result span.element{ display: block; border-bottom: 1px solid #333; padding: 5px; cursor: pointer; position: relative; }
 #search_result span.element:last-child{ border: none; }
+#search_result span.element span.play_song{ display: block; padding-right: 50px; }
+#search_result span.element span.enqueue_song{ display: block; position: absolute; bottom: 0; right: 0px; height: 95%; background: #333; width: 50px; text-align: center; border-radius: 2px; line-height: 50px; font-weight: bold; }
+#search_result span.element span.enqueue_song span{ font-size: 10px; }
+#search_result span.element span.enqueue_song.active{ background: #4a9cf1; }
 #search_result span.element span.title{ display: block; font-size: 20px; overflow: hidden; text-overflow: ellipsis; width: 100%; }
 #search_result span.element span.artist{ display: block; font-size: 15px; overflow: hidden; text-overflow: ellipsis; width: 100%; }
 #search_result span.element span.album{ font-size: 12px; display: none; }
+#search_result span.no_result{ display: block; padding-top: 5px; text-align: center; }
+
+#overlay_background{ position: fixed; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 100; display: none; }
+#overlay_content{ width: 60%; padding: 5%; background: #333; color: #FFF; position: fixed; top: 35%; left: 50%; margin-left: -35%; z-index: 110; border-radius: 2px; text-align: center; border: 1px solid #FFF; font-weight: bold; display: none; }
+#overlay_content img{ margin-right: 10px; top: 2px; position: relative; }
+#overlay_content a{ color: #4a9cf1; text-decoration: none; }
 
 /* TODO: style responsive */

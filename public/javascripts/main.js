@@ -25,10 +25,7 @@ function animateSongProcess(lElapsed, lTotal){
 function callCommand(sCommand){
 
 	$.getJSON("/api/" + sCommand, function(data){
-		if(sCommand == "volumedec" || sCommand == "volumeinc"){
-			$("#volumetext").html(data.result[0]);
-			$("#volumeprocess").css({width: data.result[0].substr(0, data.result[0].length - 1) + "%"});
-		}
+		setTimeout(function(){ $("#search_result span.element span.enqueue_song").removeClass("active"); }, 1000);
 	});
 
 }
@@ -46,20 +43,37 @@ function loadStatus(sStat, bLoad){
 	if(typeof bLoad == "undefined")
 		bLoad = false;
 
-	$.getJSON("/api/" + sStat, function(data){
+	if(!navigator.onLine){
+		setTimeout(function(){ loadStatus(sStat, bLoad); }, 1000);
+	}
 
-		if(bLoad && sStat != "process"){
-			setInformation(data, bLoad);
-		}else{
-			var lElapsed = 0;
-			if(typeof data.elapsed != "undefined"){
-				lElapsed = data.elapsed;
+	$.ajax("/api/" + sStat, {
+		success: function(oData){
+			hideOverlay();
+			if(bLoad && sStat != "process"){
+				setInformation(oData, bLoad);
+			}else{
+				var lElapsed = 0;
+				if(typeof oData.elapsed != "undefined"){
+					lElapsed = oData.elapsed;
+				}
+				var lPercentage = (lElapsed / oData.result.length) * 100;
+				$("#timeproc").attr("style", "width: " + lPercentage + "%;");
 			}
-			var lPercentage = (lElapsed / data.result.length) * 100;
-			$("#timeproc").attr("style", "width: " + lPercentage + "%;");
 		}
-
 	});
+
+}
+
+function showOverlay(sContent){
+	$("#overlay_text").html(sContent);
+	$("#overlay_background").css("display", "block");
+	$("#overlay_content").css("display", "block");
+}
+
+function hideOverlay(){
+	$("#overlay_background").css("display", "none");
+	$("#overlay_content").css("display", "none");
 }
 
 //------------------------------------------------------------------------------
@@ -69,6 +83,10 @@ function loadStatus(sStat, bLoad){
 // @param boolean : if socket needs to be set up
 //
 function setInformation(data, bLoad){
+
+	$(".select").each(function(){
+		$(this).removeClass("active");
+	});
 
 	// set song title to display
 	$("#songname").removeClass("animate").css("left", "0").html("<span class=\"title\">" + data.result.title + "</span><span class=\"artist\">" + data.result.artist + "</span>").addClass("animate");
@@ -83,7 +101,8 @@ function setInformation(data, bLoad){
 	if(typeof data.elapsed != "undefined"){
 		lElapsed = data.elapsed;
 	}
-	var lPercentage = (lElapsed / data.result.length) * 100;
+	var lLatency = (new Date().getTime() - data.timestamp) / 1000;
+	var lPercentage = ((lElapsed + lLatency) / data.result.length) * 100;
 	$("#timeproc").attr("style", "width: " + lPercentage + "%;");
 	if(data.playing == "true"){
 		setTimeout(function(){ animateSongProcess(lElapsed, data.result.length); }, 500);
@@ -126,13 +145,23 @@ function setInformation(data, bLoad){
 function loadSongs(sSearch){
 
 	$.getJSON("/api/search?s=" + sSearch, function(data){
-		$("#search_result span.element").unbind("click");
+		$("#search_result span.element span.play_song").unbind("click");
+		$("#search_result span.element span.enqueue_song").unbind("click");
 		$("#search_result").html("");
+		if(data.result.length == 0){
+			$("#search_result").append("<span class=\"no_result select\">No results.</span>");
+		}
 		$.each(data.result, function(i, o){
-			$("#search_result").append("<span class=\"element select\" data-id=\"" + o["id"] + "\"><span class=\"title\">" + o["track"] + "</span><span class=\"artist\">" + o["artist"] + "</span><span class=\"album\">" + o["album"] + "</span></span>");
+			$("#search_result").append("<span class=\"element select\" data-id=\"" + o["id"] + "\"><span class=\"play_song\"><span class=\"title\">" + o["track"] + "</span><span class=\"artist\">" + o["artist"] + "</span><span class=\"album\">" + o["album"] + "</span></span><span class=\"enqueue_song\">Q<span>+</span></span></span>");
 		});
-		$("#search_result span.element").bind("click", function(oEvent){
-			loadStatus("play?p=" + $(this).attr("data-id"));
+		$("#search_result span.element span.play_song").bind("click", function(oEvent){
+			loadStatus("play?p=" + $(this).parent().attr("data-id"));
+		});
+		$("#search_result span.element span.enqueue_song").bind("click", function(oEvent){
+			if(!$(this).hasClass("active")){
+				$(this).addClass("active");
+				callCommand("enqueue?p=" + $(this).parent().attr("data-id"));
+			}
 		});
 	});
 
@@ -146,14 +175,17 @@ $(document).ready(function(){
 });
 
 $("#songprev").click(function(){
+	$(this).addClass("active");
 	oConnection.send(JSON.stringify({"control": "prev"}));
 });
 
 $("#songnext").click(function(){
+	$(this).addClass("active");
 	oConnection.send(JSON.stringify({"control": "next"}));
 });
 
 $("#songplaypause").click(function(){
+	$(this).addClass("active");
 	if($(this).hasClass("playing")){
 		$("#songplaypause").html(">").removeClass("playing");
 	}else{
@@ -219,6 +251,7 @@ function sleepCheck() {
 	var now = new Date().getTime();
 	var diff = now - lastCheck;
 	if (diff > 5000) {
+		showOverlay("Synchronizing<br /><br />Why am I seeing this?<br /><a href=\"https://github.com/gruberpatrick/gmusicremote/wiki/Troubleshoot#synchronizing\">Troubleshoot</a>");
   	loadStatus("", true);
 	}
 	lastCheck = now;

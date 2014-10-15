@@ -73,7 +73,7 @@ if(settings.experimental_functions){
 	setInterval(function(){
 
 		var bChanged = false;
-		exec("amixer get Master", function(err, stdio, stderr){
+		/*exec("amixer get Master", function(err, stdio, stderr){
 			var sSignal = signals.parseVolume(stdio)[0];
 			if(sCurrentVolume != sSignal){
 				bChanged = true;
@@ -81,7 +81,7 @@ if(settings.experimental_functions){
 			}
 			if(bChanged){
 				oVolumeTimeout = setTimeout(function(){ signals.loadGeneralInformation() }, 500);
-			}else{
+			}else{*/
 				exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.Playing", function(err, stdio, stderr){
 					var bSignal = signals.parsePlaying(stdio);
 					if(bCurrentPlaying != bSignal){
@@ -92,8 +92,8 @@ if(settings.experimental_functions){
 						signals.loadGeneralInformation();
 					}
 				});
-			}
-		});
+			/*}
+		});*/
 
 	}, 1000);
 }
