@@ -85,7 +85,7 @@ module.exports = {
 	//
 	// @param object : the result object for the final output
 	//
-	loadGeneralInformation: function(res){
+	loadGeneralInformation: function(oRes, bSocket){
 
 		var oInfo = {};
 		var oVolume = {};
@@ -100,10 +100,10 @@ module.exports = {
 					bPlaying = oThat.parsePlaying(stdio);
 					exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.CurrentSong", function(err, stdio, stder){
 						oInfo = oThat.parseSong(stdio);
-						if(typeof res != "undefined"){
-							res.send({volume: oVolume, result: oInfo, elapsed: lElapsed, playing: bPlaying, settings: settings, timestamp: new Date().getTime()});
+						if(typeof bSocket != "undefined" && bSocket){
+							oThat.sendSocket({volume: oVolume, result: oInfo, elapsed: lElapsed, playing: bPlaying, timestamp: new Date().getTime()}, oRes);
 						}else{
-							oThat.sendSocket({volume: oVolume, result: oInfo, elapsed: lElapsed, playing: bPlaying, timestamp: new Date().getTime()});
+							oRes.send({volume: oVolume, result: oInfo, elapsed: lElapsed, playing: bPlaying, settings: settings, timestamp: new Date().getTime()});
 						}
 					});
 				});
@@ -117,10 +117,14 @@ module.exports = {
 	//
 	// @param object : the data to send
 	//
-	sendSocket: function(oData){
+	sendSocket: function(oData, oSocket){
+
+		if(typeof oSocket == "undefined"){
+			oSocket = false;
+		}
 
 		for(var i = 0; i < aConnection.length; i++){
-			if(aConnection[i] != null){
+			if(aConnection[i] != null || aConnection[i] != oSocket){
 				aConnection[i].sendUTF(JSON.stringify(oData));
 			}
 		}

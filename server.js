@@ -6,6 +6,7 @@ var oVolumeTimeout = null;
 settings = require('./settings.json');
 signals = require('./includes/signals');
 aConnection = [];
+var oCurrentConnection = null;
 
 var server = http.createServer(function(request, response) {});
 server.listen(settings.server_port, function() { });
@@ -22,6 +23,7 @@ wsServer.on('request', function(request) {
     oConnection.on('message', function(message) {
 
 			var oData = JSON.parse(message.utf8Data);
+      oCurrentConnection = oConnection;
 
 			if(typeof oData.volume != "undefined"){
 				if(typeof oVolumeTimeout != "null"){
@@ -44,7 +46,7 @@ wsServer.on('request', function(request) {
     oConnection.on('close', function(connection) {
 			for(var i = 0; i < aConnection.length; i++){
 				if(aConnection[i] == oConnection){
-					aConnection[i] = null;
+					aConnection.splice(i, 1);
 				}
 			}
 		});
@@ -57,7 +59,7 @@ var proc = exec("dbus-monitor \"type='signal',sender='org.gmusicbrowser',interfa
 proc.stdout.on("data", function(sSignal){
 	sSignal = signals.parseSignal(sSignal);
 	if(sSignal == "SongChanged"){
-		signals.loadGeneralInformation();
+		signals.loadGeneralInformation(null, true);
 	}
 });
 
@@ -73,15 +75,15 @@ if(settings.experimental_functions){
 	setInterval(function(){
 
 		var bChanged = false;
-		/*exec("amixer get Master", function(err, stdio, stderr){
+		exec("amixer get Master", function(err, stdio, stderr){
 			var sSignal = signals.parseVolume(stdio)[0];
 			if(sCurrentVolume != sSignal){
 				bChanged = true;
 				sCurrentVolume = sSignal;
 			}
 			if(bChanged){
-				oVolumeTimeout = setTimeout(function(){ signals.loadGeneralInformation() }, 500);
-			}else{*/
+				oVolumeTimeout = setTimeout(function(){ signals.loadGeneralInformation(oCurrentConnection, true) }, 500);
+			}else{
 				exec("dbus-send --print-reply --dest=org.gmusicbrowser /org/gmusicbrowser org.gmusicbrowser.Playing", function(err, stdio, stderr){
 					var bSignal = signals.parsePlaying(stdio);
 					if(bCurrentPlaying != bSignal){
@@ -89,11 +91,11 @@ if(settings.experimental_functions){
 						bCurrentPlaying = bSignal;
 					}
 					if(bChanged){
-						signals.loadGeneralInformation();
+						signals.loadGeneralInformation(null, true);
 					}
 				});
-			/*}
-		});*/
+			}
+		});
 
 	}, 1000);
 }
